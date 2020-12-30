@@ -1,6 +1,7 @@
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
+import java.util.List;
 
 class Graph {
     private int V; // No. of Vertices
@@ -88,12 +89,94 @@ class Graph {
         // traversal
         DFSUtil(v, visisted);
     }
+}
+
+class BNode {
+    int key;
+    BNode left, right;
+
+    public BNode(int item)
+    {
+        key = item;
+        left = right = null;
+    }
+}
+
+class BinaryTree {
+    // Root of Binary Tree
+    BNode root;
+
+    // Constructors
+    BinaryTree(int key) {
+        root = new BNode(key);
+    }
+
+    BinaryTree() {
+        root = null;
+    }
+}
+
+class TNode<T> {
+    private List<TNode<T>> children = new ArrayList<TNode<T>>();
+    private TNode<T> parent = null;
+    private T data = null;
+
+    public TNode(T data) {
+        this.data = data;
+    }
+
+    public TNode(T data, TNode<T> parent) {
+        this.data = data;
+        setParent(parent);
+    }
+
+    public List<TNode<T>> getChildren() {
+        return children;
+    }
+
+    public void setParent(TNode<T> parent) {
+        parent.addChild(this);
+        this.parent = parent;
+    }
+
+    public void addChild(T data) {
+        TNode<T> child = new TNode<T>(data);
+        addChild(child);
+    }
+
+    public void addChild(TNode<T> child)
+    {
+        child.parent = this;
+        this.children.add(child);
+    }
+
+    public T getData() {
+        return this.data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public boolean isRoot() {
+        return (this.parent == null);
+    }
+
+    public boolean isLeaf() {
+        return this.children.size() == 0;
+    }
+
+    public void removeParent() {
+        this.parent = null;
+    }
 
 
 }
+
 public class Main {
 
     public static void main(String[] args) {
+        // Graph Strcuture and Traversal
         Graph g = new Graph(4);
 
         g.addEdge(0, 1);
@@ -103,12 +186,30 @@ public class Main {
         g.addEdge(2, 3);
         g.addEdge(3, 3);
 
-        System.out.println("Following is Breath First Traversl (starting from vertex 2)");
+        System.out.println("Following is Breath First Traversal (starting from vertex 2)");
 
         g.BFS(2);
 
-        System.out.println("\nFollowing is Depth First Traversl (starting from vertex 2)");
+        System.out.println("\nFollowing is Depth First Traversal (starting from vertex 2)");
 
         g.DFS(2);
+
+        // Binary Structure
+        BinaryTree tree = new BinaryTree();
+
+        tree.root = new BNode(1);
+        tree.root.left = new BNode(2);
+        tree.root.right = new BNode(3);
+
+        tree.root.left.left = new BNode(4);
+
+        // Tree
+        TNode<String> parentNode = new TNode<>("Parent");
+        TNode<String> childNode1 = new TNode<>("Child 1", parentNode);
+        TNode<String> childNode2 = new TNode<>("Child 2");
+        childNode2.setParent(parentNode);
+
+        TNode<String> grandChildNode = new TNode<String>("Grandchild of parentNode, Child of childNode1", childNode1);
+        List<TNode<String>> childNodes = parentNode.getChildren();
     }
 }
